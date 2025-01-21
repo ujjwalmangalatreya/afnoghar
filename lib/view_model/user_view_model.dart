@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/user_model.dart';
-import 'package:hamroghar/view/guestScreens/account_screen.dart';
 import 'package:hamroghar/view/guest_home_screen.dart';
 
 class UserViewModel {

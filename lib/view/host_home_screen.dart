@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hamroghar/view/guestScreens/account_screen.dart';
-import 'package:hamroghar/view/guestScreens/explore_screen.dart';
 import 'package:hamroghar/view/guestScreens/inbox_screen.dart';
-import 'package:hamroghar/view/guestScreens/saved_listing_screens.dart';
-import 'package:hamroghar/view/guestScreens/trips_screens.dart';
 import 'package:hamroghar/view/hostScreens/bookings_screens.dart';
 import 'package:hamroghar/view/hostScreens/my_posting_screens.dart';
 
@@ -20,7 +17,7 @@ class _HostHomeScreenState extends State<HostHomeScreen> {
 
   int selectedIndex = 0;
   final List<String> screenTitles = [
-    "Booking","My Posting","Inbox","Profile"
+    "Bookings","My Postings","Inbox","Profile"
   ];
 
   final List<Widget> screens = [

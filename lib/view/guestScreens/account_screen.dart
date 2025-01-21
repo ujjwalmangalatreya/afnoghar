@@ -35,6 +35,7 @@ class _AccountScreenState extends State<AccountScreen> {
       }).catchError((error) {
         print("Error fetching user ID: $error");
       });
+      AppConstants.currentUser.isHost = true;
       AppConstants.currentUser.isCurrentlyHosting = true;
       Get.to(()=>HostHomeScreen());
     }
