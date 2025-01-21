@@ -71,7 +71,7 @@ class UserViewModel {
 
     await AppWrite.database.createDocument(
       databaseId: AppWrite.databaseId,
-      collectionId: "678f583900318840d9d4",
+      collectionId: AppWrite.userCollectionId,
       documentId: id,
       data: dataMap,
     );
