@@ -4,18 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/model/app_constants.dart';
-import 'package:hamroghar/view/account_screen.dart';
+import 'package:hamroghar/model/user_model.dart';
+import 'package:hamroghar/view/guestScreens/account_screen.dart';
+import 'package:hamroghar/view/guest_home_screen.dart';
 
 class UserViewModel {
-  Future<void> signUp(
-      String email,
-      String password,
-      String firstName,
-      String lastName,
-      String city,
-      String country,
-      String bio,
-      File imageFileOfUser) async {
+  UserModel userModel = UserModel();
+  signUp(String email, String password, String firstName, String lastName,
+      String city, String country, String bio, File imageFileOfUser) async {
     Get.snackbar("Please Wait", "We are creating your account.");
 
     try {
@@ -52,7 +48,7 @@ class UserViewModel {
       });
 
       Get.snackbar("Congratulations", "Your account has been created.");
-      Get.to(()=>AccountScreen());
+      Get.to(() => GuestHomeScreen());
     } on AppwriteException catch (e) {
       Get.snackbar("ERROR", e.message ?? "An error occurred");
     } catch (e) {
@@ -60,8 +56,8 @@ class UserViewModel {
     }
   }
 
-  Future<void> saveUserToAppwrite(String bio, String city, String country,
-      String email, String firstName, String lastName, String id) async {
+  saveUserToAppwrite(String bio, String city, String country, String email,
+      String firstName, String lastName, String id) async {
     final Map<String, dynamic> dataMap = {
       "bio": bio,
       "city": city,
@@ -83,8 +79,7 @@ class UserViewModel {
     );
   }
 
-  Future<void> addImageToAppwriteStorage(
-      File imageFileOfUser, String currentUserId) async {
+  addImageToAppwriteStorage(File imageFileOfUser, String currentUserId) async {
     try {
       // Create file ID using user ID
       final String fileId = '$currentUserId.png';
@@ -106,41 +101,40 @@ class UserViewModel {
     }
   }
 
-  Future<void> userLogin(email, password) async {
+  userLogin(email, password) async {
     Get.snackbar("Please Wait", "Checking Your credentials..");
     try {
-      final result = await AppWrite.account.createEmailPasswordSession(email: email, password: password);
+      final result = await AppWrite.account
+          .createEmailPasswordSession(email: email, password: password);
       String currentUserID = result.userId;
       AppConstants.currentUser.id = currentUserID;
       await getUserInfo(currentUserID);
       await getImageFromStorage(currentUserID);
 
       Get.snackbar("Logged-In", "You are logged in successfully");
-      Get.to(()=>AccountScreen());
+      Get.to(() => GuestHomeScreen());
     } catch (e) {
       Get.snackbar("ERROR", e.toString());
     }
   }
 
-  Future<void> getUserInfo(currentUserId)async {
-    try{
-        final response = await AppWrite.database.getDocument(
-            databaseId: AppWrite.databaseId,
-            collectionId: AppWrite.userCollectionId,
-            documentId: currentUserId,
-        );
-        AppConstants.currentUser.firstName = response.data["firstName"] ?? "";
-        AppConstants.currentUser.lastName = response.data["firstName"] ?? "";
-        AppConstants.currentUser.email = response.data["firstName"] ?? "";
-        AppConstants.currentUser.bio = response.data["firstName"] ?? "";
-        AppConstants.currentUser.city = response.data["firstName"] ?? "";
-        AppConstants.currentUser.country = response.data["firstName"] ?? "";
-        AppConstants.currentUser.isHost = response.data["firstName"] ?? false;
-    }catch(e){
+  getUserInfo(currentUserId) async {
+    try {
+      final response = await AppWrite.database.getDocument(
+        databaseId: AppWrite.databaseId,
+        collectionId: AppWrite.userCollectionId,
+        documentId: currentUserId,
+      );
+      AppConstants.currentUser.firstName = response.data["firstName"] ?? "";
+      AppConstants.currentUser.lastName = response.data["firstName"] ?? "";
+      AppConstants.currentUser.email = response.data["firstName"] ?? "";
+      AppConstants.currentUser.bio = response.data["firstName"] ?? "";
+      AppConstants.currentUser.city = response.data["firstName"] ?? "";
+      AppConstants.currentUser.country = response.data["firstName"] ?? "";
+      AppConstants.currentUser.isHost = response.data["firstName"] ?? false;
+    } catch (e) {
       Get.snackbar("ERROR", e.toString());
     }
-
-
   }
 
   getImageFromStorage(String currentUserId) async {
@@ -151,7 +145,8 @@ class UserViewModel {
     try {
       final response = await AppWrite.storage.getFileView(
         bucketId: AppWrite.bucketId,
-        fileId: "$currentUserId.png", // Ensure the file extension matches your storage file
+        fileId:
+            "$currentUserId.png", // Ensure the file extension matches your storage file
       );
       final image = MemoryImage(response);
       AppConstants.currentUser.displayImage = image;
@@ -161,5 +156,29 @@ class UserViewModel {
       return null;
     }
   }
+
+  becomeHost(String userId) async {
+    try {
+      userModel.isHost = true;
+      Map<String, dynamic> dataMap = {
+        "isHost": true,
+      };
+      final response = await AppWrite.database.updateDocument(
+        collectionId: AppWrite.userCollectionId,
+        documentId: userId,
+        data: dataMap,
+        databaseId: AppWrite.databaseId, // Data to update
+      );
+      print("User updated: ${response.data}");
+    } catch (e) {
+      print("Error updating user: $e");
+      Get.snackbar("Error", "Failed to update user data");
+    }
+  }
+
+  modifyCurrentlyHosting(bool isHosting){
+    userModel.isCurrentlyHosting = isHosting;
+  }
+
 
 }
