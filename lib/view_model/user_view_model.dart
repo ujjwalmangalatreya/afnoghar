@@ -4,11 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/model/app_constants.dart';
+import 'package:hamroghar/view/account_screen.dart';
 
 class UserViewModel {
-
-  Future<void> signUp(String email, String password, String firstName,
-      String lastName, String city, String country, String bio,
+  Future<void> signUp(
+      String email,
+      String password,
+      String firstName,
+      String lastName,
+      String city,
+      String country,
+      String bio,
       File imageFileOfUser) async {
     Get.snackbar("Please Wait", "We are creating your account.");
 
@@ -22,7 +28,6 @@ class UserViewModel {
 
       final String currentUserId = user.$id;
 
-
       // Update local user data
       AppConstants.currentUser.id = currentUserId;
       AppConstants.currentUser.firstName = firstName;
@@ -35,27 +40,28 @@ class UserViewModel {
 
       // Save user data to database and upload image
       await saveUserToAppwrite(
-        bio, city, country, email, firstName, lastName, currentUserId,
+        bio,
+        city,
+        country,
+        email,
+        firstName,
+        lastName,
+        currentUserId,
       ).whenComplete(() async {
         await addImageToAppwriteStorage(imageFileOfUser, currentUserId);
       });
 
       Get.snackbar("Congratulations", "Your account has been created.");
+      Get.to(()=>AccountScreen());
     } on AppwriteException catch (e) {
-      Get.snackbar("Error", e.message ?? "An error occurred");
+      Get.snackbar("ERROR", e.message ?? "An error occurred");
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("ERROR", e.toString());
     }
   }
 
-  Future<void> saveUserToAppwrite(
-      String bio,
-      String city,
-      String country,
-      String email,
-      String firstName,
-      String lastName,
-      String id) async {
+  Future<void> saveUserToAppwrite(String bio, String city, String country,
+      String email, String firstName, String lastName, String id) async {
     final Map<String, dynamic> dataMap = {
       "bio": bio,
       "city": city,
@@ -77,8 +83,8 @@ class UserViewModel {
     );
   }
 
-
-  Future<void> addImageToAppwriteStorage(File imageFileOfUser, String currentUserId) async {
+  Future<void> addImageToAppwriteStorage(
+      File imageFileOfUser, String currentUserId) async {
     try {
       // Create file ID using user ID
       final String fileId = '$currentUserId.png';
@@ -96,7 +102,64 @@ class UserViewModel {
       AppConstants.currentUser.displayImage =
           MemoryImage(imageFileOfUser.readAsBytesSync());
     } on AppwriteException catch (e) {
-      Get.snackbar("Error", "Failed to upload image: ${e.message}");
+      Get.snackbar("ERROR", "Failed to upload image: ${e.message}");
     }
   }
+
+  Future<void> userLogin(email, password) async {
+    Get.snackbar("Please Wait", "Checking Your credentials..");
+    try {
+      final result = await AppWrite.account.createEmailPasswordSession(email: email, password: password);
+      String currentUserID = result.userId;
+      AppConstants.currentUser.id = currentUserID;
+      await getUserInfo(currentUserID);
+      await getImageFromStorage(currentUserID);
+
+      Get.snackbar("Logged-In", "You are logged in successfully");
+      Get.to(()=>AccountScreen());
+    } catch (e) {
+      Get.snackbar("ERROR", e.toString());
+    }
+  }
+
+  Future<void> getUserInfo(currentUserId)async {
+    try{
+        final response = await AppWrite.database.getDocument(
+            databaseId: AppWrite.databaseId,
+            collectionId: AppWrite.userCollectionId,
+            documentId: currentUserId,
+        );
+        AppConstants.currentUser.firstName = response.data["firstName"] ?? "";
+        AppConstants.currentUser.lastName = response.data["firstName"] ?? "";
+        AppConstants.currentUser.email = response.data["firstName"] ?? "";
+        AppConstants.currentUser.bio = response.data["firstName"] ?? "";
+        AppConstants.currentUser.city = response.data["firstName"] ?? "";
+        AppConstants.currentUser.country = response.data["firstName"] ?? "";
+        AppConstants.currentUser.isHost = response.data["firstName"] ?? false;
+    }catch(e){
+      Get.snackbar("ERROR", e.toString());
+    }
+
+
+  }
+
+  getImageFromStorage(String currentUserId) async {
+    if (AppConstants.currentUser.displayImage != null) {
+      return AppConstants.currentUser.displayImage;
+    }
+
+    try {
+      final response = await AppWrite.storage.getFileView(
+        bucketId: AppWrite.bucketId,
+        fileId: "$currentUserId.png", // Ensure the file extension matches your storage file
+      );
+      final image = MemoryImage(response);
+      AppConstants.currentUser.displayImage = image;
+      return image;
+    } catch (e) {
+      Get.snackbar("ERROR", e.toString());
+      return null;
+    }
+  }
+
 }

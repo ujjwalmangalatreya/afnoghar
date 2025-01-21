@@ -13,6 +13,7 @@ class AppWrite {
   static const String userCollectionId = '678f583900318840d9d4';
   static const String bucketId = '678f27f80034007fdad5';
 
+
   static void init() {
     _client = Client()
         .setEndpoint("https://cloud.appwrite.io/v1")
