@@ -71,11 +71,12 @@ class UserViewModel {
 
     await AppWrite.database.createDocument(
       databaseId: AppWrite.databaseId,
-      collectionId: "678f4ea1000682bf368c",
+      collectionId: "678f583900318840d9d4",
       documentId: id,
       data: dataMap,
     );
   }
+
 
   Future<void> addImageToAppwriteStorage(File imageFileOfUser, String currentUserId) async {
     try {
