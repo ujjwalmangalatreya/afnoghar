@@ -22,6 +22,7 @@ class UserViewModel {
 
       final String currentUserId = user.$id;
 
+
       // Update local user data
       AppConstants.currentUser.id = currentUserId;
       AppConstants.currentUser.firstName = firstName;
@@ -70,7 +71,7 @@ class UserViewModel {
 
     await AppWrite.database.createDocument(
       databaseId: AppWrite.databaseId,
-      collectionId: "users",
+      collectionId: "678f4ea1000682bf368c",
       documentId: id,
       data: dataMap,
     );

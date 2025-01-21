@@ -7,7 +7,7 @@ import 'package:hamroghar/view/spash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AppWrite.inti();
+  AppWrite.init();
   runApp(const MyApp());
 }
 
