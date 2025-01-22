@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hamroghar/model/booking_model.dart';
 import 'package:hamroghar/model/contact_model.dart';
+import 'package:hamroghar/model/posting_model.dart';
+import 'package:hamroghar/model/review_model.dart';
 
 class UserModel extends ContactModel {
   String? email;
@@ -9,8 +12,11 @@ class UserModel extends ContactModel {
   String? country;
   bool? isHost;
   bool? isCurrentlyHosting;
-  Map<String, dynamic>? documentData; // Instead of DocumentSnapshot, we'll use Map for Appwrite
+  Map<String, dynamic>? documentData;
 
+  List<PostingModel>? myPostings;
+  List<BookingModel>? myBookings;
+  List<ReviewModel>? myReviews;
   // Constructor
   UserModel({
     String? id = "",
@@ -29,6 +35,9 @@ class UserModel extends ContactModel {
       displayImage: displayImage) {
     isHost = false;
     isCurrentlyHosting = false;
+    myPostings=[];
+    myBookings=[];
+    myReviews=[];
   }
 
   // Factory constructor to create UserModel from Appwrite document
@@ -59,5 +68,19 @@ class UserModel extends ContactModel {
       'isHost': isHost,
       'isCurrentlyHosting': isCurrentlyHosting,
     };
+  }
+
+  addPostingsToMyPostings(PostingModel posting) async{
+
+    myPostings!.add(posting);
+    List<String> myPostingIDsList =[];
+    myPostings!.forEach((element){
+      myPostingIDsList!.add(element.id!);
+    });
+
+    //TODO: NEED TO CONVERT THIS IN APPWRITE UPDATE
+    // await FirebaseFirestore.instance.collection("users").doc(id).upadate({
+    //       "myPostingIDs" : myPostingIDsList;
+    // });
   }
 }

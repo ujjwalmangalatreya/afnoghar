@@ -8,10 +8,13 @@ class AppWrite {
   static late final Account account;
   static late final Storage storage;
 
+
   // Database constants
   static const String databaseId = '678f27e000215c383c73';
   static const String userCollectionId = '678f583900318840d9d4';
   static const String bucketId = '678f27f80034007fdad5';
+  static const String postingCollectionId ='6790b55f0000261f53ba';
+  static const String postingImagesStorageId ='6790b885000dd6898334';
 
 
   static void init() {

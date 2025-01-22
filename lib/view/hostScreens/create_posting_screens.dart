@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hamroghar/global.dart';
+import 'package:hamroghar/model/app_constants.dart';
+import 'package:hamroghar/view/host_home_screen.dart';
 import 'package:hamroghar/widgets/amenities_ui.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -110,7 +114,42 @@ class _CreatePostingScreensState extends State<CreatePostingScreens> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async{
+              if(!formKey.currentState!.validate()){
+                return;
+              }
+              if(residenceTypeSelected == "") {
+                return;
+              }
+              if(_imagesList!.isEmpty){
+                return;
+              }
+
+              postingModel.name = _nameTextEditingController.text;
+              postingModel.price = double.parse(_priceTextEditingController.text);
+              postingModel.description = _descriptionTextEditingController.text;
+              postingModel.address = _amenitiesTextEditingController.text;
+              postingModel.city = _cityTextEditingController.text;
+              postingModel.country = _countryTextEditingController.text;
+              postingModel.amenities = _amenitiesTextEditingController.text.split(",");
+              postingModel.type =residenceTypeSelected;
+              postingModel.beds =_beds;
+              postingModel.bathrooms =_bathrooms;
+              postingModel.displayImages =_imagesList;
+
+              postingModel.host = AppConstants.currentUser.createUserFromContact();
+              postingModel.setImagesNames();
+
+              //TODO : CHECK IF ITS NEW POSTING OR OLD POSING..
+              postingModel.rating =3.5;
+              postingModel.bookings =[];
+              postingModel.reviews =[];
+
+             await postingViewModel.addListingInfo();
+             await postingViewModel.addImageToStorage();
+
+             Get.to(()=>HostHomeScreen());
+            },
             icon: Icon(Icons.upload),
           ),
         ],
