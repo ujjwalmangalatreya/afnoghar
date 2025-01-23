@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hamroghar/appwrite.dart';
+import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/booking_model.dart';
 import 'package:hamroghar/model/contact_model.dart';
 import 'package:hamroghar/model/posting_model.dart';
@@ -70,17 +72,27 @@ class UserModel extends ContactModel {
     };
   }
 
-  addPostingsToMyPostings(PostingModel posting) async{
+  addPostingsToMyPostings(PostingModel posting) async {
+    try {
+      myPostings!.add(posting);
 
-    myPostings!.add(posting);
-    List<String> myPostingIDsList =[];
-    myPostings!.forEach((element){
-      myPostingIDsList!.add(element.id!);
-    });
+      List<String> myPostingIDsList = myPostings!.map((element) => element.id!).toList();
 
-    //TODO: NEED TO CONVERT THIS IN APPWRITE UPDATE
-    // await FirebaseFirestore.instance.collection("users").doc(id).upadate({
-    //       "myPostingIDs" : myPostingIDsList;
-    // });
+      final userId = AppConstants.currentUser.id; // Get the current user's ID
+      if (userId == null) {
+        throw Exception("User ID is not available");
+      }
+      await AppWrite.database.updateDocument(
+        databaseId: AppWrite.databaseId,
+        collectionId: AppWrite.userCollectionId,  // Replace with your user collection ID
+        documentId: userId,  // Use the current user's ID
+        data: {
+          "myPostingIDs": myPostingIDsList,  // Field that stores the posting IDs
+        },
+      );
+      print("User postings updated successfully.");
+    } catch (e) {
+      print("Error updating user postings: $e");
+    }
   }
 }

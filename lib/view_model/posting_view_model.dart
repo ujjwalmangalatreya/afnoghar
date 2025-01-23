@@ -32,8 +32,7 @@ class PostingViewModel {
     );
     postingModel.id = response.$id;
     print('Document created successfully with ID: ${response.$id}');
-    /** DocumentReference ref = await FirebaseFirestore.instacne.collection("postings").add(dataMap);
-        posting.id = ref.id; **/
+
     await AppConstants.currentUser.addPostingsToMyPostings(postingModel);
   }
 

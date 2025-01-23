@@ -21,6 +21,7 @@ class UserViewModel {
         password: password,
       );
 
+
       final String currentUserId = user.$id;
 
       // Update local user data
@@ -50,8 +51,10 @@ class UserViewModel {
       Get.to(() => GuestHomeScreen());
     } on AppwriteException catch (e) {
       Get.snackbar("ERROR", e.message ?? "An error occurred");
+      print(e.message);
     } catch (e) {
       Get.snackbar("ERROR", e.toString());
+      print(e.toString());
     }
   }
 
@@ -75,6 +78,7 @@ class UserViewModel {
       collectionId: AppWrite.userCollectionId,
       documentId: id,
       data: dataMap,
+
     );
   }
 
@@ -125,12 +129,12 @@ class UserViewModel {
         documentId: currentUserId,
       );
       AppConstants.currentUser.firstName = response.data["firstName"] ?? "";
-      AppConstants.currentUser.lastName = response.data["firstName"] ?? "";
-      AppConstants.currentUser.email = response.data["firstName"] ?? "";
-      AppConstants.currentUser.bio = response.data["firstName"] ?? "";
-      AppConstants.currentUser.city = response.data["firstName"] ?? "";
-      AppConstants.currentUser.country = response.data["firstName"] ?? "";
-      AppConstants.currentUser.isHost = response.data["firstName"] ?? false;
+      AppConstants.currentUser.lastName = response.data["lastName"] ?? "";
+      AppConstants.currentUser.email = response.data["email"] ?? "";
+      AppConstants.currentUser.bio = response.data["bio"] ?? "";
+      AppConstants.currentUser.city = response.data["city"] ?? "";
+      AppConstants.currentUser.country = response.data["country"] ?? "";
+      AppConstants.currentUser.isHost = response.data["isHost"] ?? false;
     } catch (e) {
       Get.snackbar("ERROR", e.toString());
     }
@@ -163,10 +167,11 @@ class UserViewModel {
         "isHost": true,
       };
       final response = await AppWrite.database.updateDocument(
+        databaseId: AppWrite.databaseId,
         collectionId: AppWrite.userCollectionId,
         documentId: userId,
         data: dataMap,
-        databaseId: AppWrite.databaseId, // Data to update
+         // Data to update
       );
       print("User updated: ${response.data}");
     } catch (e) {
