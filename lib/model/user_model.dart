@@ -42,7 +42,6 @@ class UserModel extends ContactModel {
     myReviews=[];
   }
 
-  // Factory constructor to create UserModel from Appwrite document
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['\$id'] ?? "", // Appwrite uses '\$id' for document IDs
@@ -57,8 +56,6 @@ class UserModel extends ContactModel {
       ..isCurrentlyHosting = map['isCurrentlyHosting'] ?? false
       ..documentData = map;
   }
-
-  // Convert UserModel to Map for Appwrite
   Map<String, dynamic> toMap() {
     return {
       'firstName': firstName,
@@ -75,19 +72,17 @@ class UserModel extends ContactModel {
   addPostingsToMyPostings(PostingModel posting) async {
     try {
       myPostings!.add(posting);
-
       List<String> myPostingIDsList = myPostings!.map((element) => element.id!).toList();
-
       final userId = AppConstants.currentUser.id; // Get the current user's ID
       if (userId == null) {
         throw Exception("User ID is not available");
       }
       await AppWrite.database.updateDocument(
         databaseId: AppWrite.databaseId,
-        collectionId: AppWrite.userCollectionId,  // Replace with your user collection ID
-        documentId: userId,  // Use the current user's ID
+        collectionId: AppWrite.userCollectionId,
+        documentId: userId,
         data: {
-          "myPostingIDs": myPostingIDsList,  // Field that stores the posting IDs
+          "myPostingIDs": myPostingIDsList,
         },
       );
       print("User postings updated successfully.");

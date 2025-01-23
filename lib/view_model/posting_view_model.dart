@@ -36,18 +36,6 @@ class PostingViewModel {
     await AppConstants.currentUser.addPostingsToMyPostings(postingModel);
   }
 
-  // addImageToStorage() async {
-  //   //TODO: NEED TO CONVERT THIS TO APPWRITE
-  //   //   PostingModel posting = PostingModel();
-  //   //   for(int i = 0 ; i< posting.displayImages!.length ; i++){
-  //   //     Reference ref = FirebaseStorage.instance.ref()
-  //   //         .child("postingImages")
-  //   //         .child(posting.id!)
-  //   //         .child(posting.imageNames![i]);
-  //   //   }
-  //   //   await ref.putData(posting.displayImages![i].bytes).whenComplete((){});
-  // }
-
   addImageToStorage() async {
     try {
       for (int i = 0; i < postingModel.displayImages!.length; i++) {
