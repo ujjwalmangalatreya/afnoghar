@@ -90,4 +90,30 @@ class UserModel extends ContactModel {
       print("Error updating user postings: $e");
     }
   }
+
+  getMyPostingFromDatabase() async {
+    try {
+      // Fetch the current user's account details
+      var user = await AppWrite.account.get();
+      // Fetch the user's document from the database
+      var document = await AppWrite.database.getDocument(
+        databaseId: AppWrite.databaseId,
+        collectionId: AppWrite.userCollectionId,
+        documentId: user.$id,
+      );
+      // Extract the list of posting IDs
+      List<String> myPostingIDs = List<String>.from(document.data["myPostingIDs"] ?? []);
+      // Iterate through the posting IDs and fetch their details
+      for (String postingId in myPostingIDs) {
+        PostingModel posting = PostingModel(id: postingId);
+        await posting.getPostingInformationFromDatabase();
+        await posting.getAppPostingImagesFromDatabase();
+        myPostings?.add(posting);
+      }
+      print("Successfully retrieved all postings.");
+      print(myPostings);
+    } catch (e) {
+      print("Error fetching postings: $e");
+    }
+  }
 }

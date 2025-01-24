@@ -8,8 +8,11 @@ import 'package:hamroghar/view/host_home_screen.dart';
 import 'package:hamroghar/widgets/amenities_ui.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../model/posting_model.dart';
+
 class CreatePostingScreens extends StatefulWidget {
-  const CreatePostingScreens({super.key});
+  PostingModel? posting;
+   CreatePostingScreens({super.key,this.posting});
 
   @override
   State<CreatePostingScreens> createState() => _CreatePostingScreensState();

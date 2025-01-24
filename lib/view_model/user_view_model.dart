@@ -11,20 +11,17 @@ class UserViewModel {
   UserModel userModel = UserModel();
   signUp(String email, String password, String firstName, String lastName,
       String city, String country, String bio, File imageFileOfUser) async {
-    Get.snackbar("Please Wait", "We are creating your account.");
+      Get.snackbar("Please Wait", "We are creating your account.");
 
     try {
-      // Create user account
       final user = await AppWrite.account.create(
         userId: ID.unique(),
         email: email,
         password: password,
       );
 
-
       final String currentUserId = user.$id;
 
-      // Update local user data
       AppConstants.currentUser.id = currentUserId;
       AppConstants.currentUser.firstName = firstName;
       AppConstants.currentUser.lastName = lastName;
@@ -34,7 +31,6 @@ class UserViewModel {
       AppConstants.currentUser.email = email;
       AppConstants.currentUser.password = password;
 
-      // Save user data to database and upload image
       await saveUserToAppwrite(
         bio,
         city,
@@ -46,7 +42,6 @@ class UserViewModel {
       ).whenComplete(() async {
         await addImageToAppwriteStorage(imageFileOfUser, currentUserId);
       });
-
       Get.snackbar("Congratulations", "Your account has been created.");
       Get.to(() => GuestHomeScreen());
     } on AppwriteException catch (e) {
@@ -78,13 +73,11 @@ class UserViewModel {
       collectionId: AppWrite.userCollectionId,
       documentId: id,
       data: dataMap,
-
     );
   }
 
   addImageToAppwriteStorage(File imageFileOfUser, String currentUserId) async {
     try {
-      // Create file ID using user ID
       final String fileId = '$currentUserId.png';
 
       await AppWrite.storage.createFile(
@@ -95,8 +88,6 @@ class UserViewModel {
           filename: fileId,
         ),
       );
-
-      // Update user's display image in memory
       AppConstants.currentUser.displayImage =
           MemoryImage(imageFileOfUser.readAsBytesSync());
     } on AppwriteException catch (e) {
@@ -114,10 +105,13 @@ class UserViewModel {
       await getUserInfo(currentUserID);
       await getImageFromStorage(currentUserID);
 
+      await AppConstants.currentUser.getMyPostingFromDatabase();
+
       Get.snackbar("Logged-In", "You are logged in successfully");
       Get.to(() => GuestHomeScreen());
     } catch (e) {
-      Get.snackbar("ERROR", e.toString());
+      print(e.toString());
+      Get.snackbar("ERROR : IS this one", e.toString());
     }
   }
 
@@ -144,7 +138,6 @@ class UserViewModel {
     if (AppConstants.currentUser.displayImage != null) {
       return AppConstants.currentUser.displayImage;
     }
-
     try {
       final response = await AppWrite.storage.getFileView(
         bucketId: AppWrite.bucketId,
@@ -171,7 +164,6 @@ class UserViewModel {
         collectionId: AppWrite.userCollectionId,
         documentId: userId,
         data: dataMap,
-         // Data to update
       );
       print("User updated: ${response.data}");
     } catch (e) {
@@ -183,6 +175,8 @@ class UserViewModel {
   modifyCurrentlyHosting(bool isHosting){
     userModel.isCurrentlyHosting = isHosting;
   }
+
+
 
 
 }
