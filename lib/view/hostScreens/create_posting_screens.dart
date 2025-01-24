@@ -129,7 +129,7 @@ class _CreatePostingScreensState extends State<CreatePostingScreens> {
               }
 
               postingModel.name = _nameTextEditingController.text;
-              postingModel.price = double.parse(_priceTextEditingController.text);
+              postingModel.price = double.parse(_priceTextEditingController.text).round();
               postingModel.description = _descriptionTextEditingController.text;
               postingModel.address = _amenitiesTextEditingController.text;
               postingModel.city = _cityTextEditingController.text;

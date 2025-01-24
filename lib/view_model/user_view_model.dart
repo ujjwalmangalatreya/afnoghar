@@ -104,7 +104,6 @@ class UserViewModel {
       AppConstants.currentUser.id = currentUserID;
       await getUserInfo(currentUserID);
       await getImageFromStorage(currentUserID);
-
       await AppConstants.currentUser.getMyPostingFromDatabase();
 
       Get.snackbar("Logged-In", "You are logged in successfully");

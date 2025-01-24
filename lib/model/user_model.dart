@@ -106,7 +106,7 @@ class UserModel extends ContactModel {
       // Iterate through the posting IDs and fetch their details
       for (String postingId in myPostingIDs) {
         PostingModel posting = PostingModel(id: postingId);
-        await posting.getPostingInformationFromDatabase();
+        await posting.getPostingInformationFromDatabase(postingId);
         await posting.getAppPostingImagesFromDatabase();
         myPostings?.add(posting);
       }

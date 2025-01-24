@@ -1,15 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hamroghar/global.dart';
 import 'package:hamroghar/model/app_constants.dart';
-import 'package:hamroghar/model/posting_model.dart';
 import 'package:hamroghar/view/hostScreens/create_posting_screens.dart';
 import 'package:hamroghar/widgets/posting_list_tile_button.dart';
 import 'package:hamroghar/widgets/posting_list_tile_ui.dart';
 
 class MyPostingScreens extends StatefulWidget {
-
-
    MyPostingScreens({super.key});
 
   @override
@@ -45,7 +43,8 @@ class _MyPostingScreensState extends State<MyPostingScreens> {
                   ),
                   child:(index == AppConstants.currentUser.myPostings!.length)
                       ?  PostingListTileButton()
-                      : PostingListTileUi(),
+                      : PostingListTileUi(posting: postingModel,
+                  ),
                 ),
               ),
             );

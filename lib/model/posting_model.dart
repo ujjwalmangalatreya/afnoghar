@@ -13,7 +13,7 @@ class PostingModel {
   String? id;
   String? name;
   String? type;
-  double? price;
+  int? price;
   String? description;
   String? address;
   String? city;
@@ -68,18 +68,18 @@ class PostingModel {
     }
   }
 
-  getPostingInformationFromDatabase() async {
+  getPostingInformationFromDatabase(postingID) async {
     try {
-      var user = await AppWrite.account.get();
       // Fetch the posting document from the database
-      var postingModel = await AppWrite.database.getDocument(
+      final postingModel = await AppWrite.database.getDocument(
         databaseId: AppWrite.databaseId,
         collectionId: AppWrite.postingCollectionId,
-        documentId: user.$id,
+        documentId: postingID,
       );
+      // Access the data property of the document
+      final postingData = postingModel.data;
       // Populate this posting model with the fetched data
-      getPostingInformationFromPostingModel(
-          postingModel as Map<String, dynamic>);
+      await getPostingInformationFromPostingModel(postingData);
       print("Posting information successfully retrieved.");
     } catch (e) {
       // Handle errors gracefully
@@ -90,8 +90,12 @@ class PostingModel {
   getPostingInformationFromPostingModel(Map<String, dynamic> postingModel) {
     address = postingModel["address"] ?? "";
     amenities = List<String>.from(postingModel["amenities"] ?? []);
-    bathrooms = Map<String, int>.from(postingModel["bathrooms"] ?? {});
-    beds = Map<String, int>.from(postingModel["beds"] ?? {});
+    bathrooms = (postingModel["bathrooms"] != null)
+        ? Map<String, int>.from(jsonDecode(postingModel["bathrooms"]))
+        : {};
+    beds = (postingModel["beds"] != null)
+        ? Map<String, int>.from(jsonDecode(postingModel["beds"]))
+        : {};
     city = postingModel["city"] ?? "";
     country = postingModel["country"] ?? "";
     description = postingModel["description"] ?? "";
@@ -110,11 +114,11 @@ class PostingModel {
   getAppPostingImagesFromDatabase() async {
    displayImages = [];
     try {
-      for (int i = 0; i < imageNames!.length; i++) {
-        // Fetch the file from Appwrite Storage
+      for (int i = 0; i < (imageNames?.length ?? 0); i++) {
         Uint8List imageData = await AppWrite.storage.getFileView(
           bucketId: AppWrite.bucketId, // Replace with your bucket ID
-          fileId: "${id!}/${imageNames![i]}", // File path structure
+          fileId: "image$i.png",
+            // File path structure
         );
         // Add the image as a MemoryImage to the list
         displayImages?.add(MemoryImage(imageData));
