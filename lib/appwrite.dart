@@ -11,9 +11,9 @@ class AppWrite {
 
   // Database constants
   static const String databaseId = '678f27e000215c383c73';
-  static const String userCollectionId = '678f583900318840d9d4';
+  static const String userCollectionId = '6793a5e3002301870c79';
   static const String bucketId = '678f27f80034007fdad5';
-  static const String postingCollectionId ='6790b55f0000261f53ba';
+  static const String postingCollectionId ='6793a5ed0005f04ed7ca';
   static const String postingImagesStorageId ='6790b885000dd6898334';
 
 
