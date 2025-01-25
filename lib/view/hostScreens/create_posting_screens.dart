@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hamroghar/global.dart';
 import 'package:hamroghar/model/app_constants.dart';
+import 'package:hamroghar/view/guest_home_screen.dart';
 import 'package:hamroghar/view/host_home_screen.dart';
 import 'package:hamroghar/widgets/amenities_ui.dart';
 import 'package:image_picker/image_picker.dart';
@@ -68,25 +69,44 @@ class _CreatePostingScreensState extends State<CreatePostingScreens> {
   }
 
   initializeValues(){
-    _nameTextEditingController = TextEditingController(text: "");
-    _priceTextEditingController = TextEditingController(text: "");
-    _descriptionTextEditingController = TextEditingController(text: "");
-    _addressTextEditingController = TextEditingController(text: "");
-    _cityTextEditingController = TextEditingController(text: "");
-    _countryTextEditingController = TextEditingController(text: "");
-    _amenitiesTextEditingController = TextEditingController(text: "");
-    residenceTypeSelected = residenceType.first;
+    if(widget.posting == null){
+      _nameTextEditingController = TextEditingController(text: "");
+      _priceTextEditingController = TextEditingController(text: "");
+      _descriptionTextEditingController = TextEditingController(text: "");
+      _addressTextEditingController = TextEditingController(text: "");
+      _cityTextEditingController = TextEditingController(text: "");
+      _countryTextEditingController = TextEditingController(text: "");
+      _amenitiesTextEditingController = TextEditingController(text: "");
+      residenceTypeSelected = residenceType.first;
 
-    _beds ={
-      'small' : 0,
-      'medium' : 0,
-      'large' : 0
-    };
-    _bathrooms ={
-      'full' : 0,
-      'half' : 0,
-    };
-    _imagesList =[];
+      _beds ={
+        'small' : 0,
+        'medium' : 0,
+        'large' : 0
+      };
+      _bathrooms ={
+        'full' : 0,
+        'half' : 0,
+      };
+      _imagesList =[];
+    }else{
+      _nameTextEditingController = TextEditingController(text: widget.posting!.name);
+      _priceTextEditingController = TextEditingController(text: widget.posting!.price.toString());
+      _descriptionTextEditingController = TextEditingController(text: widget.posting!.description);
+      _addressTextEditingController = TextEditingController(text: widget.posting!.address);
+      _cityTextEditingController = TextEditingController(text: widget.posting!.city);
+      _countryTextEditingController = TextEditingController(text: widget.posting!.country);
+      _amenitiesTextEditingController = TextEditingController(text: widget.posting!.getAmenitiesString());
+      _beds = widget.posting!.beds;
+      _bathrooms = widget.posting!.bathrooms;
+      _imagesList = widget.posting!.displayImages;
+      residenceTypeSelected = widget.posting!.type!;
+    }
+
+    setState(() {
+
+    });
+
 
   }
 
@@ -143,13 +163,35 @@ class _CreatePostingScreensState extends State<CreatePostingScreens> {
               postingModel.host = AppConstants.currentUser.createUserFromContact();
               postingModel.setImagesNames();
 
-              //TODO : CHECK IF ITS NEW POSTING OR OLD POSING..
-              postingModel.rating =3.5;
-              postingModel.bookings =[];
-              postingModel.reviews =[];
 
-             await postingViewModel.addListingInfo();
-             await postingViewModel.addImageToStorage();
+              if(widget.posting == null ){
+                postingModel.rating =3.5;
+                postingModel.bookings =[];
+                postingModel.reviews =[];
+                await postingViewModel.addListingInfo();
+                await postingViewModel.addImageToStorage();
+                Get.snackbar("New Listing", "Your listing is live now");
+              }else{
+                Get.snackbar("Updating Listing", "Please wait while we update your listing");
+                postingModel.rating = widget.posting!.rating;
+                postingModel.bookings = widget.posting!.bookings;
+                postingModel.reviews = widget.posting!.reviews;
+                postingModel.id = widget.posting!.id;
+
+                for(int i = 0 ; i < AppConstants.currentUser.myPostings!.length ; i++){
+                  if(AppConstants.currentUser.myPostings![i].id == postingModel.id){
+                    AppConstants.currentUser.myPostings![i] = postingModel;
+                    break;
+                  }
+                }
+
+                await postingViewModel.updateListingInfo();
+
+                Get.snackbar("Updating Listing", "Your listing is updated");
+
+              }
+
+              postingModel =PostingModel();
 
              Get.to(()=>HostHomeScreen());
             },

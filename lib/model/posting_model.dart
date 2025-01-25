@@ -95,27 +95,51 @@ class PostingModel {
     description = postingModel["description"] ?? "";
     String hostId = postingModel["hostID"] ?? "";
     host = ContactModel(id: hostId);
-    imageNames = List<String>.from(postingModel["imageNames"] ?? []);
+    // Handle imageNames
+    if (postingModel["imageName"] != null) {
+      print("Raw imageName data: ${postingModel["imageName"]}");
+      List<dynamic> rawList = postingModel["imageName"];
+      imageNames = rawList.map((e) => e.toString()).toList();
+      print("Converted imageNames: $imageNames");
+    } else {
+      imageNames = [];
+      print("No imageNames found");
+    }
     name = postingModel["name"] ?? "";
     price = postingModel["price"] ?? 0;
     type = postingModel["type"] ?? "";
-
-    print(postingModel["name"]);
   }
 
-  Future<List<MemoryImage>?> getAppPostingImagesFromDatabase() async {
+  getAppPostingImagesFromDatabase() async {
     displayImages = [];
+    print("Fetching images for: $imageNames");
     try {
       for (String imageName in imageNames ?? []) {
-        Uint8List imageData = await AppWrite.storage.getFileView(
-          bucketId: AppWrite.bucketId,
-          fileId: imageName,
-        );
-        displayImages?.add(MemoryImage(imageData));
+        try {
+          print("Fetching image with fileId: $imageName");
+          Uint8List imageData = await AppWrite.storage.getFileView(
+            bucketId: AppWrite.postingImagesStorageId,
+            fileId: imageName,
+          );
+          displayImages?.add(MemoryImage(imageData));
+          print("Successfully fetched image: $imageName");
+        } catch (e) {
+          print("Error fetching image with fileId $imageName: $e");
+        }
       }
     } catch (e) {
-      print("Error fetching images: $e");
+      print("Error in getAppPostingImagesFromDatabase: $e");
     }
     return displayImages;
+  }
+
+
+  getAmenitiesString(){
+    if(amenities!.isEmpty){
+      return "";
+    }
+    String amenitiesString = amenities.toString();
+    return amenitiesString.substring(1,amenitiesString.length -1 );
+
   }
 }

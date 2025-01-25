@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/booking_model.dart';
@@ -111,8 +112,8 @@ class UserModel extends ContactModel {
         myPostings?.add(posting);
       }
       print("Successfully retrieved all postings.");
-      print(myPostings);
     } catch (e) {
+      Get.snackbar("ERROR", e.toString());
       print("Error fetching postings: $e");
     }
   }

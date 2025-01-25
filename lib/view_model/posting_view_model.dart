@@ -58,4 +58,30 @@ class PostingViewModel {
       print('Error uploading images: $e');
     }
   }
+
+  updateListingInfo() async {
+    postingModel.setImagesNames();
+
+    Map<String, dynamic> dataMap = {
+      "address": postingModel.address,
+      "amenities": postingModel.amenities,
+      "bathrooms": postingModel.bathroomsJson,
+      "description": postingModel.description,
+      "beds": postingModel.bedsJson,
+      "city": postingModel.city,
+      "country": postingModel.country,
+      "hostID": AppConstants.currentUser.id,
+      "imageName": postingModel.imageNames,
+      "name": postingModel.name,
+      "price": postingModel.price,
+      "rating": 3.5,
+      "type": postingModel.type,
+    };
+    await AppWrite.database.updateDocument(
+      databaseId: AppWrite.databaseId,
+      collectionId: AppWrite.postingCollectionId,
+      documentId: postingModel.id!,
+      data: dataMap,
+    );
+  }
 }

@@ -7,7 +7,9 @@ import 'package:hamroghar/view/hostScreens/my_posting_screens.dart';
 
 
 class HostHomeScreen extends StatefulWidget {
-  const HostHomeScreen({super.key});
+
+  int? index ;
+  HostHomeScreen({super.key,this.index});
 
   @override
   State<HostHomeScreen> createState() => _HostHomeScreenState();
@@ -39,6 +41,11 @@ class _HostHomeScreenState extends State<HostHomeScreen> {
       ),
       label: title,
     );
+  }
+
+  @override
+  void initState() {
+    selectedIndex = widget.index ?? 3;
   }
 
 
