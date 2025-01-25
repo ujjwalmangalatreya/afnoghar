@@ -133,6 +133,18 @@ class PostingModel {
     return displayImages;
   }
 
+  getFirstImageFromDatabase()async{
+    if(displayImages!.isEmpty){
+      return displayImages!.first;
+    }
+    Uint8List imageData = await AppWrite.storage.getFileView(
+      bucketId: AppWrite.postingImagesStorageId,
+      fileId: imageNames!.first,
+    );
+    displayImages!.add(MemoryImage(imageData));
+    return displayImages!.first;
+  }
+
 
   getAmenitiesString(){
     if(amenities!.isEmpty){
@@ -141,5 +153,17 @@ class PostingModel {
     String amenitiesString = amenities.toString();
     return amenitiesString.substring(1,amenitiesString.length -1 );
 
+  }
+
+  double getCurrentRating(){
+    if(reviews!.isEmpty){
+      return 4;
+    }
+    double rating = 0;
+    reviews!.forEach((review){
+      rating +=   review.rating!;
+    });
+    rating /= reviews!.length;
+    return rating;
   }
 }

@@ -15,7 +15,8 @@ dependencies:
   get:
   firebase_storage:
   image_picker: ^1.1.2
-  appwrite:
+  appwrite: ^13.0.0
+  custom_rating_bar:
 
 dev_dependencies:
   flutter_test:

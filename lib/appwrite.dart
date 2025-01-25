@@ -7,6 +7,7 @@ class AppWrite {
   static late final Databases database;
   static late final Account account;
   static late final Storage storage;
+  static late Realtime realtime;
 
 
   // Database constants
@@ -22,13 +23,12 @@ class AppWrite {
         .setEndpoint("https://cloud.appwrite.io/v1")
         .setProject("678a893b0021b298bf0d")
         .setSelfSigned(status: true);
-
     // Initialize services after client is set up
     database = Databases(_client);
     account = Account(_client);
     storage = Storage(_client);
+    realtime = Realtime(_client);
   }
-
   // Prevent multiple initializations
   static bool _isInitialized = false;
 
