@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hamroghar/model/posting_model.dart';
 
 class PostingListTileUi extends StatefulWidget {
-  final PostingModel? posting;
-  const PostingListTileUi({super.key, this.posting});
+   PostingModel? posting;
+   PostingListTileUi({super.key, this.posting});
 
   @override
   State<PostingListTileUi> createState() => _PostingListTileUiState();
@@ -16,28 +16,10 @@ class _PostingListTileUiState extends State<PostingListTileUi> {
   void initState() {
     super.initState();
     posting = widget.posting;
-    print("Posting data: $posting");
-    if (posting == null) {
-      print("Warning: The posting is null!");
-    }// Do not force null-check here
   }
 
   @override
   Widget build(BuildContext context) {
-    // Handle null posting gracefully
-    if (posting == null) {
-      return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ListTile(
-          leading: const Text(
-            "No posting available",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
-          trailing: const Icon(Icons.error, color: Colors.red),
-        ),
-      );
-    }
-
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: ListTile(

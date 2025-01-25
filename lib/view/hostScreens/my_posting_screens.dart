@@ -43,7 +43,7 @@ class _MyPostingScreensState extends State<MyPostingScreens> {
                   ),
                   child:(index == AppConstants.currentUser.myPostings!.length)
                       ?  PostingListTileButton()
-                      : PostingListTileUi(posting: postingModel,
+                      : PostingListTileUi(posting:AppConstants.currentUser.myPostings![index] ,
                   ),
                 ),
               ),

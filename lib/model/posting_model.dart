@@ -8,7 +8,6 @@ import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/booking_model.dart';
 import 'package:hamroghar/model/contact_model.dart';
 import 'package:hamroghar/model/review_model.dart';
-
 class PostingModel {
   String? id;
   String? name;
@@ -42,85 +41,76 @@ class PostingModel {
   }
 
   PostingModel({
-    this.id = "",
-    this.type = "",
-    this.price = 0,
-    this.description = "",
-    this.address = "",
-    this.city = "",
-    this.country = "",
-    this.rating = 0,
+    this.id,
+    this.name,
+    this.type,
+    this.price,
+    this.description,
+    this.address,
+    this.city,
+    this.country,
+    this.rating,
   }) {
     displayImages = [];
     amenities = [];
     beds = {};
     bathrooms = {};
-    rating = 0;
     bookings = [];
     reviews = [];
   }
 
-
   setImagesNames() {
-    imageNames = [];
+    imageNames ??= [];
     for (int i = 0; i < displayImages!.length; i++) {
       imageNames!.add("image$i.png");
     }
   }
 
-  getPostingInformationFromDatabase(postingID) async {
+  Future<void> getPostingInformationFromDatabase(String postingID) async {
     try {
-      // Fetch the posting document from the database
       final postingModel = await AppWrite.database.getDocument(
         databaseId: AppWrite.databaseId,
         collectionId: AppWrite.postingCollectionId,
         documentId: postingID,
       );
-      // Access the data property of the document
       final postingData = postingModel.data;
-      // Populate this posting model with the fetched data
       await getPostingInformationFromPostingModel(postingData);
       print("Posting information successfully retrieved.");
     } catch (e) {
-      // Handle errors gracefully
       print("Error fetching posting information: $e");
     }
   }
 
-  getPostingInformationFromPostingModel(Map<String, dynamic> postingModel) {
+  Future<void> getPostingInformationFromPostingModel(Map<String, dynamic> postingModel) async {
     address = postingModel["address"] ?? "";
     amenities = List<String>.from(postingModel["amenities"] ?? []);
-    bathrooms = (postingModel["bathrooms"] != null)
+    bathrooms = postingModel["bathrooms"] is String
         ? Map<String, int>.from(jsonDecode(postingModel["bathrooms"]))
-        : {};
-    beds = (postingModel["beds"] != null)
+        : Map<String, int>.from(postingModel["bathrooms"] ?? {});
+    beds = postingModel["beds"] is String
         ? Map<String, int>.from(jsonDecode(postingModel["beds"]))
-        : {};
+        : Map<String, int>.from(postingModel["beds"] ?? {});
     city = postingModel["city"] ?? "";
     country = postingModel["country"] ?? "";
     description = postingModel["description"] ?? "";
-    // Host data handling
     String hostId = postingModel["hostID"] ?? "";
     host = ContactModel(id: hostId);
-    // Image names
     imageNames = List<String>.from(postingModel["imageNames"] ?? []);
-    // Other details
     name = postingModel["name"] ?? "";
-    price = postingModel["price"] ?? 0.0;
+    price = postingModel["price"] ?? 0;
     type = postingModel["type"] ?? "";
+
+    print(postingModel["name"]);
   }
 
-
-  getAppPostingImagesFromDatabase() async {
-   displayImages = [];
+  Future<List<MemoryImage>?> getAppPostingImagesFromDatabase() async {
+    displayImages = [];
     try {
-      for (int i = 0; i < (imageNames?.length ?? 0); i++) {
+      for (String imageName in imageNames ?? []) {
         Uint8List imageData = await AppWrite.storage.getFileView(
-          bucketId: AppWrite.bucketId, // Replace with your bucket ID
-          fileId: "image$i.png",
-            // File path structure
+          bucketId: AppWrite.bucketId,
+          fileId: imageName,
         );
-        // Add the image as a MemoryImage to the list
         displayImages?.add(MemoryImage(imageData));
       }
     } catch (e) {

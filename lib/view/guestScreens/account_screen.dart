@@ -188,7 +188,9 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   child: MaterialButton(
                     height: MediaQuery.of(context).size.height / 9.1,
-                    onPressed: () {},
+                    onPressed: () {
+                      userViewModel.logout();
+                    },
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(0.0),
                       leading: Text(

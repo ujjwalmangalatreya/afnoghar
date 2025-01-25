@@ -6,6 +6,7 @@ import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/user_model.dart';
 import 'package:hamroghar/view/guest_home_screen.dart';
+import 'package:hamroghar/view/login_screen.dart';
 
 class UserViewModel {
   UserModel userModel = UserModel();
@@ -176,6 +177,19 @@ class UserViewModel {
   }
 
 
+  logout() async {
+    try {
+      // Deletes the current session for the logged-in user
+      await AppWrite.account.deleteSession(sessionId: 'current');
+
+      // Navigate to the login screen
+      Get.to(() => LoginScreen());
+      print("User logged out successfully");
+    } catch (e) {
+      print("Error logging out: $e");
+      Get.snackbar("Error", e.toString());
+    }
+  }
 
 
 }
