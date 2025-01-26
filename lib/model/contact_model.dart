@@ -8,7 +8,6 @@ class ContactModel {
   String? lastName;
   String? fullName;
   MemoryImage? displayImage;
-  
 
   ContactModel({
     this.id = "",
@@ -19,7 +18,7 @@ class ContactModel {
   });
 
   String getFullNameOfUser() {
-    return fullName = firstName! + " " + lastName!;
+    return fullName = "${firstName!} ${lastName!}";
   }
 
   UserModel createUserFromContact() {

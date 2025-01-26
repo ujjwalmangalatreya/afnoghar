@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hamroghar/global.dart';
 import 'package:hamroghar/view/signup_screen.dart';
 
 
@@ -90,7 +91,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.only(top: 26.0),
                       child: ElevatedButton(
                         //TODO :  ON pressed operation
-                        onPressed: () {},
+                        onPressed: ()  async {
+                          if(_formKey.currentState!.validate()){
+                          await  userViewModel.userLogin(
+                              _emailTextEditingController.text.trim(),
+                              _passwordTextEditingController.text.trim());
+
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.pink,
                           padding: EdgeInsets.symmetric(horizontal: 60),
