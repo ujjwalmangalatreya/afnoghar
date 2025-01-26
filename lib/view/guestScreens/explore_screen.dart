@@ -1,5 +1,4 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/model/posting_model.dart';
@@ -44,7 +43,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         isLoading = false; // Loading complete
       });
     } catch (e) {
-      print("Error fetching documents: $e");
+      ("Error fetching documents: $e");
       setState(() {
         isLoading = false; // Stop loading even on error
       });

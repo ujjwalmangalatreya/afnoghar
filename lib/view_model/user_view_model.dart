@@ -47,10 +47,10 @@ class UserViewModel {
       Get.to(() => GuestHomeScreen());
     } on AppwriteException catch (e) {
       Get.snackbar("ERROR", e.message ?? "An error occurred");
-      print(e.message);
+      debugPrint(e.message);
     } catch (e) {
       Get.snackbar("ERROR", e.toString());
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
@@ -110,7 +110,7 @@ class UserViewModel {
       Get.snackbar("Logged-In", "You are logged in successfully");
       Get.to(() => GuestHomeScreen());
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
       Get.snackbar("ERROR : IS this one", e.toString());
     }
   }
@@ -165,9 +165,9 @@ class UserViewModel {
         documentId: userId,
         data: dataMap,
       );
-      print("User updated: ${response.data}");
+      debugPrint("User updated: ${response.data}");
     } catch (e) {
-      print("Error updating user: $e");
+      debugPrint("Error updating user: $e");
       Get.snackbar("Error", "Failed to update user data");
     }
   }
@@ -184,9 +184,9 @@ class UserViewModel {
 
       // Navigate to the login screen
       Get.to(() => LoginScreen());
-      print("User logged out successfully");
+      debugPrint("User logged out successfully");
     } catch (e) {
-      print("Error logging out: $e");
+      debugPrint("Error logging out: $e");
       Get.snackbar("Error", e.toString());
     }
   }

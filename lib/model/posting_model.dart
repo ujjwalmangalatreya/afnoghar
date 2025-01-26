@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hamroghar/appwrite.dart';
-import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/booking_model.dart';
 import 'package:hamroghar/model/contact_model.dart';
 import 'package:hamroghar/model/review_model.dart';
+
 class PostingModel {
   String? id;
   String? name;
@@ -75,9 +73,9 @@ class PostingModel {
       );
       final postingData = postingModel.data;
       await getPostingInformationFromPostingModel(postingData);
-      print("Posting information successfully retrieved.");
+      debugPrint("Posting information successfully retrieved.");
     } catch (e) {
-      print("Error fetching posting information: $e");
+      debugPrint("Error fetching posting information: $e");
     }
   }
 
@@ -97,13 +95,13 @@ class PostingModel {
     host = ContactModel(id: hostId);
     // Handle imageNames
     if (postingModel["imageName"] != null) {
-      print("Raw imageName data: ${postingModel["imageName"]}");
+      debugPrint("Raw imageName data: ${postingModel["imageName"]}");
       List<dynamic> rawList = postingModel["imageName"];
       imageNames = rawList.map((e) => e.toString()).toList();
-      print("Converted imageNames: $imageNames");
+      debugPrint("Converted imageNames: $imageNames");
     } else {
       imageNames = [];
-      print("No imageNames found");
+      debugPrint("No imageNames found");
     }
     name = postingModel["name"] ?? "";
     price = postingModel["price"] ?? 0;
@@ -112,23 +110,23 @@ class PostingModel {
 
   getAppPostingImagesFromDatabase() async {
     displayImages = [];
-    print("Fetching images for: $imageNames");
+    debugPrint("Fetching images for: $imageNames");
     try {
       for (String imageName in imageNames ?? []) {
         try {
-          print("Fetching image with fileId: $imageName");
+          debugPrint("Fetching image with fileId: $imageName");
           Uint8List imageData = await AppWrite.storage.getFileView(
             bucketId: AppWrite.postingImagesStorageId,
             fileId: imageName,
           );
           displayImages?.add(MemoryImage(imageData));
-          print("Successfully fetched image: $imageName");
+          debugPrint("Successfully fetched image: $imageName");
         } catch (e) {
-          print("Error fetching image with fileId $imageName: $e");
+          debugPrint("Error fetching image with fileId $imageName: $e");
         }
       }
     } catch (e) {
-      print("Error in getAppPostingImagesFromDatabase: $e");
+      debugPrint("Error in getAppPostingImagesFromDatabase: $e");
     }
     return displayImages;
   }
@@ -160,9 +158,9 @@ class PostingModel {
       return 4;
     }
     double rating = 0;
-    reviews!.forEach((review){
+    for (var review in reviews!) {
       rating +=   review.rating!;
-    });
+    }
     rating /= reviews!.length;
     return rating;
   }

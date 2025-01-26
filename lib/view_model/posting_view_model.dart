@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:appwrite/appwrite.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/global.dart';
 import 'package:hamroghar/model/app_constants.dart';
@@ -31,7 +32,7 @@ class PostingViewModel {
       data: dataMap,
     );
     postingModel.id = response.$id;
-    print('Document created successfully with ID: ${response.$id}');
+    debugPrint('Document created successfully with ID: ${response.$id}');
 
     await AppConstants.currentUser.addPostingsToMyPostings(postingModel);
   }
@@ -52,10 +53,10 @@ class PostingViewModel {
           ),
         );
 
-        print('File uploaded successfully with ID: ${response.$id}');
+        debugPrint('File uploaded successfully with ID: ${response.$id}');
       }
     } catch (e) {
-      print('Error uploading images: $e');
+      debugPrint('Error uploading images: $e');
     }
   }
 

@@ -1,7 +1,5 @@
 import 'package:custom_rating_bar/custom_rating_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/posting_model.dart';
 
 class PostingGridTileUi extends StatefulWidget {

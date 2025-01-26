@@ -86,9 +86,9 @@ class UserModel extends ContactModel {
           "myPostingIDs": myPostingIDsList,
         },
       );
-      print("User postings updated successfully.");
+      debugPrint("User postings updated successfully.");
     } catch (e) {
-      print("Error updating user postings: $e");
+      debugPrint("Error updating user postings: $e");
     }
   }
 
@@ -111,10 +111,10 @@ class UserModel extends ContactModel {
         await posting.getAppPostingImagesFromDatabase();
         myPostings?.add(posting);
       }
-      print("Successfully retrieved all postings.");
+      debugPrint("Successfully retrieved all postings.");
     } catch (e) {
       Get.snackbar("ERROR", e.toString());
-      print("Error fetching postings: $e");
+      debugPrint("Error fetching postings: $e");
     }
   }
 }

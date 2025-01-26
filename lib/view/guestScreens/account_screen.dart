@@ -30,10 +30,9 @@ class _AccountScreenState extends State<AccountScreen> {
     } else {
       await AppWrite.account.get().then((user) async {
         String userId = user.$id; // Get the user ID
-        print("User id is ::::"+userId);
         await userViewModel.becomeHost(userId); // Pass it to becomeHost
       }).catchError((error) {
-        print("Error fetching user ID: $error");
+        Get.snackbar("Error fetching user ID",error.toString());
       });
       AppConstants.currentUser.isHost = true;
       AppConstants.currentUser.isCurrentlyHosting = true;
