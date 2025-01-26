@@ -164,4 +164,49 @@ class PostingModel {
     rating /= reviews!.length;
     return rating;
   }
+
+
+  getHostFromDatabase()async{
+      await host!.getContactInfoFromDatabase();
+      await host!.getImageFromDatabase();
+
+  }
+
+  int getGuestNumber(){
+    int? numGuests = 0;
+    numGuests = numGuests + beds!['small']!;
+    numGuests = numGuests + beds!['medium']! * 2;
+    numGuests = numGuests + beds!['large']! * 2;
+
+    return numGuests;
+  }
+
+  String getBedRoomText(){
+    String text = "";
+    if(beds!['small'] != 0){
+      text = text + beds!['small'].toString() + "single/twin";
+    }
+    if(beds!['medium'] != 0){
+      text = text + beds!['medium'].toString() + "double";
+    }
+    if(beds!['large'] != 0 ){
+      text = text + beds!['large'].toString() + "queen/king";
+    }
+    return text;
+  }
+  String getBathroomText(){
+    String text = "";
+    if(beds!['full'] !=0){
+      text = "$text${beds!['full']} full";
+    }
+    if(beds!['half'] !=0){
+      text = "$text${beds!['half']} half";
+    }
+    return text;
+  }
+
+
+  String getFullAddress(){
+    return address! + ","+city! +","+ country!;
+  }
 }
