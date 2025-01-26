@@ -181,32 +181,38 @@ class PostingModel {
     return numGuests;
   }
 
-  String getBedRoomText(){
+  String getBedRoomText() {
     String text = "";
-    if(beds!['small'] != 0){
-      text = text + beds!['small'].toString() + "single/twin";
+
+    if (beds!['small'] != 0) {
+      text += "${beds!['small']} single/twin";
     }
-    if(beds!['medium'] != 0){
-      text = text + beds!['medium'].toString() + "double";
+
+    if (beds!['medium'] != 0) {
+      if (text.isNotEmpty) text += " , ";
+      text += "${beds!['medium']} double";
     }
-    if(beds!['large'] != 0 ){
-      text = text + beds!['large'].toString() + "queen/king";
+
+    if (beds!['large'] != 0) {
+      if (text.isNotEmpty) text += ", ";
+      text += "${beds!['large']} queen/king";
     }
     return text;
   }
   String getBathroomText(){
-    String text = "";
-    if(beds!['full'] !=0){
-      text = "$text${beds!['full']} full";
+    String text = " ";
+    if(bathrooms!['full'] != 0){
+      text = "$text${bathrooms!['full']} full";
     }
-    if(beds!['half'] !=0){
-      text = "$text${beds!['half']} half";
+    if(bathrooms!['half'] !=0){
+      if (text.isNotEmpty) text += " , ";
+      text = "$text${bathrooms!['half']} half";
     }
     return text;
   }
 
 
   String getFullAddress(){
-    return address! + ","+city! +","+ country!;
+    return address! + " , "+city! +" , "+ country!;
   }
 }
