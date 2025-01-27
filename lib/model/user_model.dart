@@ -17,6 +17,7 @@ class UserModel extends ContactModel {
   bool? isCurrentlyHosting;
   Map<String, dynamic>? documentData;
 
+  List<PostingModel>? savedPostings;
   List<PostingModel>? myPostings;
   List<BookingModel>? myBookings;
   List<ReviewModel>? myReviews;
@@ -32,15 +33,16 @@ class UserModel extends ContactModel {
     this.city = "",
     this.country = "",
   }) : super(
-      id: id,
-      firstName: firstName,
-      lastName: lastName,
-      displayImage: displayImage) {
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            displayImage: displayImage) {
     isHost = false;
     isCurrentlyHosting = false;
-    myPostings=[];
-    myBookings=[];
-    myReviews=[];
+    myPostings = [];
+    myBookings = [];
+    myReviews = [];
+    savedPostings = [];
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -73,7 +75,8 @@ class UserModel extends ContactModel {
   addPostingsToMyPostings(PostingModel posting) async {
     try {
       myPostings!.add(posting);
-      List<String> myPostingIDsList = myPostings!.map((element) => element.id!).toList();
+      List<String> myPostingIDsList =
+          myPostings!.map((element) => element.id!).toList();
       final userId = AppConstants.currentUser.id; // Get the current user's ID
       if (userId == null) {
         throw Exception("User ID is not available");
@@ -103,7 +106,8 @@ class UserModel extends ContactModel {
         documentId: user.$id,
       );
       // Extract the list of posting IDs
-      List<String> myPostingIDs = List<String>.from(document.data["myPostingIDs"] ?? []);
+      List<String> myPostingIDs =
+          List<String>.from(document.data["myPostingIDs"] ?? []);
       // Iterate through the posting IDs and fetch their details
       for (String postingId in myPostingIDs) {
         PostingModel posting = PostingModel(id: postingId);
@@ -116,5 +120,29 @@ class UserModel extends ContactModel {
       Get.snackbar("ERROR", e.toString());
       debugPrint("Error fetching postings: $e");
     }
+  }
+
+  addSavedPostings(PostingModel posting) async {
+    for (var savePosting in savedPostings!) {
+      if (savePosting.id == posting.id) {
+        return;
+      }
+    }
+    savedPostings!.add(posting);
+    List<String> savedPostingIDs = [];
+
+    savedPostings!.forEach((savePosting) {
+      savedPostingIDs.add(savePosting.id!);
+    });
+    final userId = await AppWrite.account.get();
+    await AppWrite.database.updateDocument(
+      databaseId: AppWrite.databaseId,
+      collectionId: AppWrite.userCollectionId,
+      documentId: userId.$id,
+      data: {
+        'savedPostingIDs': savedPostingIDs,
+      },
+    );
+    Get.snackbar("Marked as Favorite", "Listing is saved.");
   }
 }

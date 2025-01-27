@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/posting_model.dart';
 import 'package:hamroghar/widgets/listing_info_tile_ui.dart';
 
@@ -54,7 +55,9 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
           color: Colors.white,
         ),),
         actions: [
-          IconButton(onPressed: (){},
+          IconButton(onPressed: (){
+                AppConstants.currentUser.addSavedPostings(posting!);
+          },
               icon: Icon(Icons.save),
           color: Colors.white,
 
