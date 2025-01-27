@@ -145,4 +145,30 @@ class UserModel extends ContactModel {
     );
     Get.snackbar("Marked as Favorite", "Listing is saved.");
   }
+
+  removeSavedPosting(PostingModel posting) async{
+    for (int i = 0 ; i < savedPostings!.length ; i++) {
+      if (savedPostings![i].id == posting.id) {
+        savedPostings!.removeAt(i);
+        break;
+      }
+    }
+    List<String> savedPostingIDs = [];
+
+    savedPostings!.forEach((savePosting) {
+      savedPostingIDs.add(savePosting.id!);
+    });
+    final userId = await AppWrite.account.get();
+    await AppWrite.database.updateDocument(
+      databaseId: AppWrite.databaseId,
+      collectionId: AppWrite.userCollectionId,
+      documentId: userId.$id,
+      data: {
+        'savedPostingIDs': savedPostingIDs,
+      },
+    );
+    Get.snackbar("Removed from Favorite", "Removed  is saved.");
+  }
+
+
 }
