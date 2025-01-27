@@ -47,9 +47,9 @@ class PostingViewModel {
         final response = await AppWrite.storage.createFile(
           bucketId: AppWrite.postingImagesStorageId,
           fileId: ID.unique(), // Automatically generate a unique file ID
-          file: InputFile(
-            filename: fileName,
+          file: InputFile.fromBytes(
             bytes: imageBytes,
+            filename: fileName,
           ),
         );
 

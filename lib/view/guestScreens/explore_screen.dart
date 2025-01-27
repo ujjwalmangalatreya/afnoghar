@@ -1,7 +1,9 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/model/posting_model.dart';
+import 'package:hamroghar/view/view_posting_screen.dart';
 import 'package:hamroghar/widgets/posting_grid_tile_ui.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -166,7 +168,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
                 return InkResponse(
                   onTap: () {
-                    // Handle click
+                    Get.to(()=>ViewPostingScreen(posting: cPosting,));
                   },
                   enableFeedback: true,
                   child: PostingGridTileUi(
