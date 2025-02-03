@@ -133,7 +133,7 @@ class MonthTileWidget extends StatelessWidget {
     return  Text(
       dateTime == null ? "" : dateTime!.day.toString(),
       style: TextStyle(
-        fontSize: 4,
+        fontSize: 14,
       ),
     );
   }

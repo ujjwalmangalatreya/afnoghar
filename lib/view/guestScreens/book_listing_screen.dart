@@ -49,7 +49,7 @@ class _BookListingScreenState extends State<BookListingScreen> {
   }
 
   _loadBookedDates(){
-    posting!.getAllBookingFromDatabase().whenComplere((){
+    posting!.getAllBookingFromDatabase().whenComplete((){
       bookedDates = posting!.getAllBookedDates();
       _buildCalenderWidgets();
     });
