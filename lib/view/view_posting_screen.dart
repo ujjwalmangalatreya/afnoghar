@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/posting_model.dart';
+import 'package:hamroghar/view/guestScreens/book_listing_screen.dart';
 import 'package:hamroghar/widgets/listing_info_tile_ui.dart';
 
 
@@ -119,7 +121,9 @@ class _ViewPostingScreenState extends State<ViewPostingScreen> {
                               ),
                             ),
                             child: MaterialButton(
-                                onPressed: (){},
+                                onPressed: (){
+                                  Get.to(()=> BookListingScreen(posting: posting,));
+                                },
                               child: Text("Book Now",
                               style: TextStyle(
                                 color: Colors.white,

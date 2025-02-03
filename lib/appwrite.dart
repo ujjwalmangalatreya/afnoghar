@@ -16,6 +16,7 @@ class AppWrite {
   static const String bucketId = '678f27f80034007fdad5';
   static const String postingCollectionId ='6793a5ed0005f04ed7ca';
   static const String postingImagesStorageId ='6790b885000dd6898334';
+  static const String bookingCollectionId = '';
 
 
   static void init() {

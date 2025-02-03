@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:hamroghar/appwrite.dart';
 import 'package:hamroghar/model/booking_model.dart';
@@ -213,6 +215,39 @@ class PostingModel {
 
 
   String getFullAddress(){
-    return address! + " , "+city! +" , "+ country!;
+    return "${address!} , ${city!} , ${country!}";
   }
+
+
+  getAllBookingFromDatabase()async{
+    try {
+      final DocumentList snapshots = await AppWrite.database.listDocuments(
+        databaseId: AppWrite.databaseId,
+        collectionId: AppWrite.bookingCollectionId,
+        queries: [
+          Query.equal('postingId', AppWrite.postingCollectionId),
+        ],
+      );
+
+      for (var snapshot in snapshots.documents) {
+        BookingModel newBooking = BookingModel();
+        await newBooking.getBookingInfoFromPosting(this, snapshot.data as DocumentList);
+        bookings!.add(newBooking);
+      }
+    } catch (e) {
+      print('Error fetching bookings: $e');
+    }
+  }
+
+
+  List<DateTime> getAllBookedDates(){
+    List<DateTime> dates = [];
+    bookings!.forEach((booking){
+      dates.addAll(booking.dates as Iterable<DateTime>);
+    });
+    return dates;
+
+  }
+
+
 }

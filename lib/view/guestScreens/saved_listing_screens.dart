@@ -57,7 +57,6 @@ class _SavedListingScreensState extends State<SavedListingScreens> {
                     ),
                     child: IconButton(
                       onPressed: () {
-
                         AppConstants.currentUser.removeSavedPosting(currentPosting);
                         setState(() {
 
