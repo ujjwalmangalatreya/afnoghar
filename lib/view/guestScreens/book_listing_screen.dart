@@ -19,7 +19,7 @@ class _BookListingScreenState extends State<BookListingScreen> {
   List<CalenderUi> calendarWidgets = [];
   
   _buildCalenderWidgets(){
-    for(int i = 0 ; i < 12 ;i ++){
+    for(int i = 0 ; i < 12 ; i ++){
       calendarWidgets.add(CalenderUi(
         monthIndex: i,
         bookedDates: bookedDates,
@@ -105,7 +105,7 @@ class _BookListingScreenState extends State<BookListingScreen> {
             ),
 
             SizedBox(
-              height: MediaQuery.of(context).size.height /2,
+              height: MediaQuery.of(context).size.height / 2,
               child: (calendarWidgets.isEmpty) ? Container() :
               PageView.builder(
                 itemCount: calendarWidgets.length,

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hamroghar/model/app_constants.dart';
 
@@ -21,14 +21,14 @@ class CalenderUi extends StatefulWidget {
 
 class _CalenderUiState extends State<CalenderUi> {
 
-  List<DateTime> _selectedDate = [];
+  List<DateTime> _selectedDates = [];
   List<MonthTileWidget> _mothTiles =[];
   int? _currentMonthInt;
   int? _currentYearInt;
 
   _setUpMothTiles(){
     _mothTiles = [];
-    int daysInMonth = AppConstants.daysInMonths![_currentMonthInt]!;
+    int daysInMonth = AppConstants.daysInMonths[_currentMonthInt]!;
     DateTime firstDayOfMonth = DateTime(_currentYearInt!,_currentMonthInt!,1);
     int firstWeekOfMonth = firstDayOfMonth.weekday;
 
@@ -38,16 +38,16 @@ class _CalenderUiState extends State<CalenderUi> {
       }
     }
     for(int i = 0 ; i < daysInMonth ; i++){
-      DateTime date = DateTime(_currentYearInt!,_currentYearInt!,1);
+      DateTime date = DateTime(_currentYearInt!,_currentYearInt!,i + 1);
       _mothTiles.add(MonthTileWidget(dateTime: date,));
     }
   }
 
   _selectDate(DateTime date){
-    if(_selectedDate.contains(date)){
-      _selectedDate.remove(date);
+    if(_selectedDates.contains(date)){
+      _selectedDates.remove(date);
     }else{
-      _selectedDate.add(date);
+      _selectedDates.add(date);
     }
     widget.selectDate!(date);
     setState(() {
@@ -65,10 +65,10 @@ class _CalenderUiState extends State<CalenderUi> {
     }
     _currentYearInt =DateTime.now().year;
     if(_currentMonthInt! < DateTime.now().month){
-      _currentYearInt = _currentYearInt!+ 1;
+      _currentYearInt = _currentYearInt! + 1;
     }
-    _selectedDate.sort();
-    _selectedDate.addAll(widget.getSelectedDates!());
+    _selectedDates.sort();
+    _selectedDates.addAll(widget.getSelectedDates!());
     _setUpMothTiles();
 
   }
@@ -80,7 +80,7 @@ class _CalenderUiState extends State<CalenderUi> {
       children: [
         Padding(padding: EdgeInsets.only(bottom: 20.0),
         child: Text(
-          "${AppConstants.monthDec[_currentMonthInt]} - ${_currentYearInt} ",
+          "${AppConstants.monthDec[_currentMonthInt]} - $_currentYearInt ",
         ),
         ),
         GridView.builder(
@@ -88,7 +88,7 @@ class _CalenderUiState extends State<CalenderUi> {
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 7,
-            childAspectRatio:  1/1,
+            childAspectRatio:  1 / 1,
           ),
           itemBuilder: (context,index){
             MonthTileWidget monthTile = _mothTiles[index];
@@ -111,7 +111,8 @@ class _CalenderUiState extends State<CalenderUi> {
               onPressed: (){
                 _selectDate(monthTile.dateTime!);
               },
-              color: (_selectedDate.contains(monthTile.dateTime)) ? Colors.blue : Colors.white,
+              color: (_selectedDates.contains(monthTile.dateTime))
+                  ? Colors.blue : Colors.white,
               child: monthTile,
 
             );
