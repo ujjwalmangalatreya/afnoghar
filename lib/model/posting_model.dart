@@ -3,7 +3,10 @@ import 'dart:typed_data';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hamroghar/appwrite.dart';
+import 'package:hamroghar/global.dart';
+import 'package:hamroghar/model/app_constants.dart';
 import 'package:hamroghar/model/booking_model.dart';
 import 'package:hamroghar/model/contact_model.dart';
 import 'package:hamroghar/model/review_model.dart';
@@ -246,6 +249,28 @@ class PostingModel {
       dates.addAll(booking.dates as Iterable<DateTime>);
     });
     return dates;
+
+  }
+
+  makeNewBooking(List<DateTime> dates,context) async{
+    Map<String,dynamic> bookingData = {
+      'dates' : dates,
+      'name' : AppConstants.currentUser.getFullNameOfUser(),
+      'userID' : AppConstants.currentUser.id,
+      'payment' : bookingPrice
+    };
+
+    //DocumnerReference refrence = await FirebaseFirestore.instance.collection('postings').doc(id).collection('bookings').add(bookingData);
+
+    BookingModel newBooking = BookingModel();
+
+    newBooking.createBooking(this,AppConstants.currentUser.createUserFromContact(),dates);
+    //newBooking.id = refrence.id;
+
+    bookings!.add(newBooking);
+    await AppConstants.currentUser.addBookingToFirestore(newBooking,bookingPrice!);
+
+    Get.snackbar("Listings", "Booking Successful");
 
   }
 

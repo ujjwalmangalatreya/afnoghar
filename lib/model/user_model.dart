@@ -171,4 +171,24 @@ class UserModel extends ContactModel {
   }
 
 
+
+  addBookingToFirestore(BookingModel booking, int totalPriceForAllNights)async{
+    String earningOld = "";
+    // await FirebaseFirestore.instance.collection("users").doc(id).get().then((dateSnapshot){
+    //   earningOld = dateSnapshot["earning"].toString();
+    // });
+    Map<String, dynamic> data = {
+      'dates' : booking.dates,
+      'postingID' : booking.posting!.id!
+    };
+   // await FirebaseFirestore.instance.doc('users/${id}/bookings/${booking.id}').set(data);
+
+    // await FirebaseFirestore.instance.collection("users").doc(id).update(
+    //   {
+    //     "earnings" : totalPriceForAllNights + int.parse(earningOld);
+    //   }
+    // );
+    myBookings!.add(booking);
+
+  }
 }

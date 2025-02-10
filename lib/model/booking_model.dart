@@ -37,4 +37,16 @@ class BookingModel {
 
     contact = ContactModel(id: id,firstName: firstName,lastName: lastName);
   }
+
+  createBooking(PostingModel postingM, ContactModel contactM , List<DateTime> datesM){
+    posting = postingM;
+    contact = contactM;
+    dates = datesM;
+    dates!.sort();
+
+  }
+
+
+
+
 }

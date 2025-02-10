@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hamroghar/global.dart';
 import 'package:hamroghar/model/posting_model.dart';
+import 'package:hamroghar/payment_gateway/paymnet_config.dart';
+import 'package:hamroghar/view/guest_home_screen.dart';
 import 'package:hamroghar/widgets/calender_ui.dart';
+import 'package:pay/pay.dart';
 
 class BookListingScreen extends StatefulWidget {
 
@@ -54,6 +61,28 @@ class _BookListingScreenState extends State<BookListingScreen> {
       _buildCalenderWidgets();
     });
   }
+
+
+  _makeBooking(){
+    if(selectedDates.isEmpty){
+      return ;
+    }
+    posting!.makeNewBooking(selectedDates,context).whenComplete((){
+      Get.back();
+
+    });
+
+  }
+
+  calculateAmountForOverAllStay(){
+    if(selectedDates.isEmpty){
+      return ;
+    }
+    int totalPriceForAllNights = (selectedDates.length * posting!.price!) ;
+    bookingPrice = totalPriceForAllNights;
+  }
+
+
 
 
   @override
@@ -117,6 +146,82 @@ class _BookListingScreenState extends State<BookListingScreen> {
 
                 ),
               ),
+            ),
+
+            bookingPrice == 0.0 ? MaterialButton(
+              onPressed: (){
+                calculateAmountForOverAllStay();
+              },
+              minWidth: double.infinity,
+              height: MediaQuery.of(context).size.height / 14,
+              color: Colors.green,
+              child: Text("Proceed",
+                style: TextStyle(color: Colors.white),),
+            ) : Container(),
+
+            paymentResults != ""
+                ? MaterialButton(
+              onPressed: (){Get.to(()=>GuestHomeScreen());
+                setState(() {
+                  paymentResults = "";
+                });
+                },
+              minWidth: double.infinity,
+              height: MediaQuery.of(context).size.height / 14,
+              color: Colors.green,
+              child: Text("Amount Paid Successfully !",
+              style: TextStyle(color: Colors.white),),
+            )
+                : Container(),
+
+            bookingPrice == 0.0 ? Container() :
+            Platform.isIOS
+                ? ApplePayButton(
+              paymentConfiguration: PaymentConfiguration.fromJsonString(defaultApplePay),
+              paymentItems: [
+                PaymentItem(
+                    amount: bookingPrice.toString(),
+                    label: "Booking Amount",
+                  status: PaymentItemStatus.final_price
+                )
+              ],
+              style: ApplePayButtonStyle.black,
+              width: double.infinity,
+              height: 50,
+              type: ApplePayButtonType.buy,
+              margin: EdgeInsets.only(top: 15.0),
+              onPaymentResult: (result) {
+                print(result);
+                setState(() {
+                  paymentResults = result.toString();
+
+                });
+                _makeBooking();
+
+              },
+              loadingIndicator: Center(child: CircularProgressIndicator(),),
+            )
+                : GooglePayButton(
+              paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
+              paymentItems: [
+                PaymentItem(
+                    amount: bookingPrice.toString(),
+                    label: "Total Amount",
+                    status: PaymentItemStatus.final_price
+                )
+              ],
+              type: GooglePayButtonType.pay,
+              margin: EdgeInsets.only(top: 15.0),
+              onPaymentResult: (result) {
+                print(result);
+                setState(() {
+                  paymentResults = result.toString();
+
+                });
+                _makeBooking();
+
+              },
+              loadingIndicator: Center(child: CircularProgressIndicator(),),
             ),
           ],
         ),
