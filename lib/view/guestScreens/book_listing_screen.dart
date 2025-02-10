@@ -89,6 +89,7 @@ class _BookListingScreenState extends State<BookListingScreen> {
       body: Padding(
         padding: EdgeInsets.fromLTRB(25, 25, 25, 0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               mainAxisSize: MainAxisSize.max,
@@ -103,16 +104,18 @@ class _BookListingScreenState extends State<BookListingScreen> {
                 Text("Sat"),
               ],
             ),
+            SizedBox(height: 20,),
+            Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 2,
+                child: (calendarWidgets.isEmpty) ? Container() :
+                PageView.builder(
+                  itemCount: calendarWidgets.length,
+                  itemBuilder: (context,index){
+                    return calendarWidgets[index];
+                  },
 
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-              child: (calendarWidgets.isEmpty) ? Container() :
-              PageView.builder(
-                itemCount: calendarWidgets.length,
-                itemBuilder: (context,index){
-                  return calendarWidgets[index];
-                },
-
+                ),
               ),
             ),
           ],
